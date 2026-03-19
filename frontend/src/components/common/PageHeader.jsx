@@ -1,4 +1,4 @@
-﻿export default function PageHeader({ title, subtitle, actions }) {
+export default function PageHeader({ title, subtitle, actions }) {
   return (
     <div className="page-header">
       <div>

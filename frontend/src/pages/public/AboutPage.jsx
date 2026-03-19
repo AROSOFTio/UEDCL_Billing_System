@@ -1,24 +1,24 @@
-﻿import PageHeader from '../../components/common/PageHeader';
+import PageHeader from '../../components/common/PageHeader';
 
 export default function AboutPage() {
   return (
     <div className="section-card">
       <PageHeader
         title="About the Platform"
-        subtitle="The Online Electricity Billing and Payment System for UEDCL is designed to centralize service delivery, customer care, and revenue operations."
+        subtitle="The Online Electricity Billing and Payment System for UEDCL centralizes revenue operations, customer care, and utility monitoring in one secure web platform."
       />
       <div className="card-grid">
         <article className="stat-card">
           <h3>Billing Accuracy</h3>
-          <p>Supports meter reading capture, unit consumption calculation, and bill generation.</p>
+          <p>Supports meter reading capture, unit consumption calculation, and professional bill generation workflows.</p>
         </article>
         <article className="stat-card">
           <h3>Customer Experience</h3>
-          <p>Customers can view bills, payments, receipts, notifications, and complaints in one place.</p>
+          <p>Customers can securely view their profile, bills, payments, receipts, notifications, and complaints.</p>
         </article>
         <article className="stat-card">
-          <h3>Administrative Oversight</h3>
-          <p>Administrators can monitor revenue, tariffs, complaints, and SMS settings from one workspace.</p>
+          <h3>Operational Oversight</h3>
+          <p>Billing, helpdesk, and administrative teams can manage service delivery from dedicated workspaces.</p>
         </article>
       </div>
     </div>

@@ -1,11 +1,11 @@
-﻿import StatusBadge from './StatusBadge';
+import StatusBadge from './StatusBadge';
 
-export default function DataTable({ columns, rows }) {
+export default function DataTable({ columns, rows, emptyTitle, emptyMessage }) {
   if (!rows?.length) {
     return (
       <div className="empty-state">
-        <h3 className="section-title">No records yet</h3>
-        <p>Data will appear here once the module is connected to the backend API.</p>
+        <h3 className="section-title">{emptyTitle || 'No records yet'}</h3>
+        <p>{emptyMessage || 'No records match the current view.'}</p>
       </div>
     );
   }
@@ -25,6 +25,10 @@ export default function DataTable({ columns, rows }) {
             <tr key={row.id || index}>
               {columns.map((column) => {
                 const value = row[column.key];
+
+                if (column.render) {
+                  return <td key={column.key}>{column.render(row)}</td>;
+                }
 
                 if (column.type === 'status') {
                   return (

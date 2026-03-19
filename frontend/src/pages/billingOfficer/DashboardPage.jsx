@@ -1,30 +1,76 @@
-﻿import PageHeader from '../../components/common/PageHeader';
-import StatCard from '../../components/common/StatCard';
+import { useEffect, useState } from 'react';
+import AlertMessage from '../../components/common/AlertMessage';
 import DataTable from '../../components/common/DataTable';
-import { dashboardStats, sampleBills } from '../../utils/mockData';
+import LoadingState from '../../components/common/LoadingState';
+import PageHeader from '../../components/common/PageHeader';
+import StatCard from '../../components/common/StatCard';
+import { fetchBills } from '../../services/billingService';
+import { fetchCustomers } from '../../services/customerService';
+import { fetchMeters } from '../../services/meterService';
+import { fetchPayments } from '../../services/paymentService';
+import { formatCurrency, formatDate, formatNumber } from '../../utils/formatters';
 
 const columns = [
-  { key: 'billNumber', label: 'Bill Number' },
-  { key: 'customer', label: 'Customer' },
-  { key: 'amount', label: 'Amount' },
+  { key: 'bill_number', label: 'Bill Number' },
+  { key: 'customer', label: 'Customer', render: (bill) => bill.customer?.name || '-' },
+  { key: 'total_amount', label: 'Amount', render: (bill) => formatCurrency(bill.total_amount) },
+  { key: 'due_date', label: 'Due Date', render: (bill) => formatDate(bill.due_date) },
   { key: 'status', label: 'Status', type: 'status' },
 ];
 
 export default function DashboardPage() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [summary, setSummary] = useState({ customers: [], meters: [], bills: [], payments: [] });
+
+  useEffect(() => {
+    async function loadDashboard() {
+      setLoading(true);
+      setError('');
+
+      try {
+        const [customers, meters, bills, payments] = await Promise.all([
+          fetchCustomers(),
+          fetchMeters(),
+          fetchBills(),
+          fetchPayments(),
+        ]);
+
+        setSummary({ customers, meters, bills, payments });
+      } catch (loadError) {
+        setError(loadError.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadDashboard();
+  }, []);
+
+  if (loading) {
+    return <LoadingState message="Loading billing dashboard..." />;
+  }
+
+  const todayPayments = summary.payments
+    .filter((payment) => String(payment.paid_at || '').slice(0, 10) === new Date().toISOString().slice(0, 10))
+    .reduce((total, payment) => total + Number(payment.amount || 0), 0);
+
   return (
     <>
       <PageHeader
         title="Billing Officer Dashboard"
-        subtitle="Operational view for customer registration, meter activity, bill generation, and payment follow-up."
+        subtitle="Manage customer registration, meter operations, bill generation, and payment posting."
       />
+      <AlertMessage tone="error">{error}</AlertMessage>
       <div className="card-grid">
-        {dashboardStats.billing_officer.map((item) => (
-          <StatCard key={item.label} {...item} />
-        ))}
+        <StatCard label="Customers" value={formatNumber(summary.customers.length)} helper="Registered customer accounts" />
+        <StatCard label="Active Meters" value={formatNumber(summary.meters.filter((meter) => meter.status === 'active').length)} helper="Meters in service" />
+        <StatCard label="Unpaid Bills" value={formatNumber(summary.bills.filter((bill) => bill.status !== 'paid').length)} helper="Bills needing follow-up" />
+        <StatCard label="Payments Today" value={formatCurrency(todayPayments)} helper="Posted across all payment methods" />
       </div>
       <section className="table-card">
-        <PageHeader title="Recent Bills" subtitle="Quick review of the latest billing activity." />
-        <DataTable columns={columns} rows={sampleBills} />
+        <PageHeader title="Recent Bills" subtitle="Latest generated bills visible to the billing operations team." />
+        <DataTable columns={columns} rows={summary.bills.slice(0, 6)} />
       </section>
     </>
   );

@@ -1,4 +1,4 @@
-﻿export const APP_TITLE = 'Online Electricity Billing and Payment System for UEDCL';
+export const APP_TITLE = 'Online Electricity Billing and Payment System for UEDCL';
 
 export const roleLabels = {
   customer: 'Customer',
@@ -14,7 +14,7 @@ export const homePathByRole = {
   administrator: '/admin/dashboard',
 };
 
-export const demoUsers = [
+export const demoCredentials = [
   {
     name: 'Admin User',
     email: 'admin@uedcl.local',
@@ -47,7 +47,6 @@ export const navigationByRole = {
     { label: 'Profile', path: '/customer/profile' },
     { label: 'Meter Details', path: '/customer/meter-details' },
     { label: 'My Bills', path: '/customer/bills' },
-    { label: 'Bill Details', path: '/customer/bills/current' },
     { label: 'Payments', path: '/customer/payments' },
     { label: 'Receipts', path: '/customer/receipts' },
     { label: 'Notifications', path: '/customer/notifications' },
@@ -67,7 +66,6 @@ export const navigationByRole = {
   helpdesk_officer: [
     { label: 'Dashboard', path: '/helpdesk/dashboard' },
     { label: 'Complaints List', path: '/helpdesk/complaints' },
-    { label: 'Complaint Details', path: '/helpdesk/complaints/current' },
     { label: 'Resolved Complaints', path: '/helpdesk/resolved' },
   ],
   administrator: [
@@ -80,3 +78,25 @@ export const navigationByRole = {
     { label: 'Settings', path: '/admin/settings' },
   ],
 };
+
+export const complaintCategories = [
+  { label: 'Billing', value: 'billing' },
+  { label: 'Meter', value: 'meter' },
+  { label: 'Outage', value: 'outage' },
+  { label: 'Payment', value: 'payment' },
+  { label: 'Service', value: 'service' },
+  { label: 'Other', value: 'other' },
+];
+
+export const paymentMethods = [
+  { label: 'Cash', value: 'cash' },
+  { label: 'Mobile Money', value: 'mobile_money' },
+  { label: 'Bank', value: 'bank' },
+];
+
+export const billStatuses = ['unpaid', 'paid', 'overdue', 'partially_paid'];
+export const customerStatuses = ['active', 'inactive', 'pending'];
+export const meterStatuses = ['active', 'inactive', 'faulty'];
+export const complaintStatuses = ['pending', 'in_progress', 'resolved'];
+export const userStatuses = ['active', 'inactive'];
+export const tariffStatuses = ['active', 'inactive'];

@@ -1,13 +1,38 @@
-﻿export function formatCurrency(value) {
+export function formatCurrency(value) {
   return new Intl.NumberFormat('en-UG', {
     style: 'currency',
     currency: 'UGX',
     maximumFractionDigits: 0,
-  }).format(value || 0);
+  }).format(Number(value || 0));
 }
 
 export function formatDate(value) {
+  if (!value) {
+    return '-';
+  }
+
   return new Intl.DateTimeFormat('en-UG', {
     dateStyle: 'medium',
   }).format(new Date(value));
+}
+
+export function formatDateTime(value) {
+  if (!value) {
+    return '-';
+  }
+
+  return new Intl.DateTimeFormat('en-UG', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(value));
+}
+
+export function formatNumber(value) {
+  return new Intl.NumberFormat('en-UG').format(Number(value || 0));
+}
+
+export function titleCase(value) {
+  return String(value || '')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (character) => character.toUpperCase());
 }

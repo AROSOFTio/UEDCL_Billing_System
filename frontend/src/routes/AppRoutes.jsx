@@ -1,4 +1,4 @@
-﻿import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import PublicLayout from '../components/layout/PublicLayout';
 import ProtectedRoute from './ProtectedRoute';
@@ -55,7 +55,7 @@ export default function AppRoutes() {
           <Route path="customer/profile" element={<CustomerProfilePage />} />
           <Route path="customer/meter-details" element={<CustomerMeterDetailsPage />} />
           <Route path="customer/bills" element={<CustomerBillsPage />} />
-          <Route path="customer/bills/current" element={<CustomerBillDetailsPage />} />
+          <Route path="customer/bills/:billId" element={<CustomerBillDetailsPage />} />
           <Route path="customer/payments" element={<CustomerPaymentsPage />} />
           <Route path="customer/receipts" element={<CustomerReceiptsPage />} />
           <Route path="customer/notifications" element={<CustomerNotificationsPage />} />
@@ -81,7 +81,7 @@ export default function AppRoutes() {
         <Route element={<DashboardLayout />}>
           <Route path="helpdesk/dashboard" element={<HelpdeskDashboardPage />} />
           <Route path="helpdesk/complaints" element={<ComplaintsListPage />} />
-          <Route path="helpdesk/complaints/current" element={<ComplaintDetailsPage />} />
+          <Route path="helpdesk/complaints/:complaintId" element={<ComplaintDetailsPage />} />
           <Route path="helpdesk/resolved" element={<ResolvedComplaintsPage />} />
         </Route>
       </Route>
@@ -98,8 +98,8 @@ export default function AppRoutes() {
         </Route>
       </Route>
 
-      <Route path="*" element={<NotFoundPage />} />
       <Route path="app" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

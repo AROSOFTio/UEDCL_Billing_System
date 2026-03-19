@@ -1,13 +1,25 @@
-﻿import { NavLink, Outlet } from 'react-router-dom';
-import { APP_TITLE } from '../../utils/constants';
+import { NavLink, Navigate, Outlet } from 'react-router-dom';
+import { APP_TITLE, homePathByRole } from '../../utils/constants';
+import { useAuth } from '../../context/AuthContext';
+import LoadingState from '../common/LoadingState';
 
 export default function PublicLayout() {
+  const { authLoading, isAuthenticated, user } = useAuth();
+
+  if (authLoading) {
+    return <LoadingState message="Loading portal..." />;
+  }
+
+  if (isAuthenticated && user?.role) {
+    return <Navigate to={homePathByRole[user.role]} replace />;
+  }
+
   return (
     <div className="public-shell">
       <header className="public-header">
         <div className="brand-block">
           <h1>{APP_TITLE}</h1>
-          <p>Electricity billing, payment, support, and monitoring in one platform.</p>
+          <p>Electricity billing, payment, customer care, and utility monitoring in one platform.</p>
         </div>
         <nav className="public-nav">
           <NavLink to="/">Home</NavLink>
@@ -20,9 +32,7 @@ export default function PublicLayout() {
       <main className="public-main">
         <Outlet />
       </main>
-      <footer className="footer">
-        {APP_TITLE} | Utility-grade billing and payment management scaffold.
-      </footer>
+      <footer className="footer">{APP_TITLE} | Institution-grade utility billing and payment management.</footer>
     </div>
   );
 }

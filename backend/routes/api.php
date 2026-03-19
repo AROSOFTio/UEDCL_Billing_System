@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReceiptController;
 use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\TariffController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('bills', [BillController::class, 'index']);
     Route::get('bills/{bill}', [BillController::class, 'show']);
+    Route::get('meters', [MeterController::class, 'index']);
+    Route::get('meters/{meter}', [MeterController::class, 'show']);
     Route::get('payments', [PaymentController::class, 'index']);
     Route::get('receipts/{receipt}', [ReceiptController::class, 'show']);
     Route::get('notifications', [NotificationController::class, 'index']);
@@ -40,9 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('customers/{customer}', [CustomerController::class, 'show']);
         Route::match(['put', 'patch'], 'customers/{customer}', [CustomerController::class, 'update']);
 
-        Route::get('meters', [MeterController::class, 'index']);
         Route::post('meters', [MeterController::class, 'store']);
-        Route::get('meters/{meter}', [MeterController::class, 'show']);
         Route::match(['put', 'patch'], 'meters/{meter}', [MeterController::class, 'update']);
 
         Route::get('meter-readings', [MeterReadingController::class, 'index']);
@@ -64,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('meters/{meter}', [MeterController::class, 'destroy']);
         Route::post('tariffs', [TariffController::class, 'store']);
         Route::match(['put', 'patch'], 'tariffs/{tariff}', [TariffController::class, 'update']);
+        Route::get('roles', [RoleController::class, 'index']);
         Route::get('users', [UserController::class, 'index']);
         Route::post('users', [UserController::class, 'store']);
         Route::get('users/{user}', [UserController::class, 'show']);

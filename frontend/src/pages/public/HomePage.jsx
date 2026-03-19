@@ -1,22 +1,22 @@
-﻿import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import StatCard from '../../components/common/StatCard';
 import { APP_TITLE } from '../../utils/constants';
 
 const highlights = [
   {
-    label: 'Utility Roles',
+    label: 'Operational Roles',
     value: '4',
-    helper: 'Customer, Billing Officer, Helpdesk Officer, Administrator',
+    helper: 'Customer, Billing Officer, Helpdesk Officer, and Administrator',
   },
   {
     label: 'Core Modules',
     value: '9',
-    helper: 'Billing, payments, complaints, notifications, and reports',
+    helper: 'Billing, payments, complaints, notifications, reports, and meter operations',
   },
   {
-    label: 'Delivery Focus',
-    value: 'Full Stack',
-    helper: 'React frontend with Laravel API structure',
+    label: 'Deployment Style',
+    value: 'Web-Based',
+    helper: 'Responsive React frontend with Laravel REST API integration',
   },
 ];
 
@@ -25,31 +25,31 @@ export default function HomePage() {
     <div>
       <section className="hero-panel">
         <div>
-          <p className="helper-text">Institution-grade electricity service operations</p>
+          <p className="helper-text">Formal digital utility service platform</p>
           <h2 className="hero-title">{APP_TITLE}</h2>
           <p className="hero-copy">
-            A modern platform for customer billing, meter operations, payment recording,
-            complaints handling, and administrative monitoring for UEDCL.
+            A complete service portal for electricity billing, payment recording, meter management,
+            customer support, and administrative oversight for UEDCL operations.
           </p>
           <div className="hero-actions">
             <Link className="button" to="/login">
               Access Portal
             </Link>
-            <Link className="button-outline" to="/about">
-              Learn More
+            <Link className="button-outline" to="/register">
+              Create Customer Account
             </Link>
           </div>
         </div>
         <aside className="hero-aside">
-          <h3>Scaffold Coverage</h3>
+          <h3>Platform Coverage</h3>
           <p>
-            The repository already includes frontend role routes, backend API placeholders,
-            migrations, seeders, documentation, and utility-themed UI foundations.
+            The interface is designed for institution-grade operations with clean dashboards,
+            structured workflows, and role-based access across the utility lifecycle.
           </p>
           <ul className="hero-list">
-            <li>Clean dashboards and operational tables</li>
-            <li>Billing, payment, and receipt module structure</li>
-            <li>Complaint and SMS workflow placeholders</li>
+            <li>Customer self-service for bills, payments, receipts, and complaints</li>
+            <li>Billing tools for meter readings, bill generation, and payment posting</li>
+            <li>Helpdesk and admin monitoring for service quality and reporting</li>
           </ul>
         </aside>
       </section>
@@ -59,7 +59,7 @@ export default function HomePage() {
           <div>
             <h3 className="section-title">Platform Snapshot</h3>
             <p className="section-copy">
-              The starting point is designed for a professional utility-company experience.
+              Built for a professional utility-company experience on desktop, tablet, and mobile.
             </p>
           </div>
         </div>

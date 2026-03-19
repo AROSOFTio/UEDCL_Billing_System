@@ -1,27 +1,55 @@
-﻿import PageHeader from '../../components/common/PageHeader';
+import { useEffect, useState } from 'react';
+import AlertMessage from '../../components/common/AlertMessage';
 import DataTable from '../../components/common/DataTable';
-
-const rows = [
-  { id: 1, name: 'Admin User', email: 'admin@uedcl.local', role: 'Administrator', status: 'Active' },
-  { id: 2, name: 'Billing Officer', email: 'billing@uedcl.local', role: 'Billing Officer', status: 'Active' },
-  { id: 3, name: 'Helpdesk Officer', email: 'helpdesk@uedcl.local', role: 'Helpdesk Officer', status: 'Active' },
-];
+import LoadingState from '../../components/common/LoadingState';
+import PageHeader from '../../components/common/PageHeader';
+import { fetchUsers } from '../../services/userService';
+import { titleCase } from '../../utils/formatters';
 
 const columns = [
   { key: 'name', label: 'Name' },
   { key: 'email', label: 'Email' },
-  { key: 'role', label: 'Role' },
+  { key: 'phone', label: 'Phone' },
+  { key: 'role', label: 'Role', render: (user) => user.role?.name || '-' },
   { key: 'status', label: 'Status', type: 'status' },
 ];
 
 export default function UsersPage() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    async function loadUsers() {
+      setLoading(true);
+      setError('');
+
+      try {
+        const response = await fetchUsers();
+        setUsers(response);
+      } catch (loadError) {
+        setError(loadError.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadUsers();
+  }, []);
+
+  if (loading) {
+    return <LoadingState message="Loading users..." />;
+  }
+
   return (
-    <section className="table-card">
+    <section className="table-card list-stack">
       <PageHeader
         title="Users"
-        subtitle="Administrative user registry placeholder with role assignments and status management."
+        subtitle="Administrative user registry for billing, helpdesk, and customer-linked accounts."
       />
-      <DataTable columns={columns} rows={rows} />
+      <AlertMessage tone="info">Role assignments and statuses are loaded live from the backend user registry.</AlertMessage>
+      <AlertMessage tone="error">{error}</AlertMessage>
+      <DataTable columns={columns} rows={users.map((user) => ({ ...user, status: titleCase(user.status) }))} />
     </section>
   );
 }

@@ -12,7 +12,13 @@ class MeterController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = Meter::query()->with('customer')->latest();
+        $query = Meter::query()->with(['customer', 'latestReading'])->latest();
+
+        $query->when($request->user()?->isRole('customer'), function ($builder) use ($request) {
+            $builder->whereHas('customer', function ($customerQuery) use ($request) {
+                $customerQuery->where('user_id', $request->user()->id);
+            });
+        });
 
         $query->when($request->filled('customer_id'), function ($builder) use ($request) {
             $builder->where('customer_id', $request->integer('customer_id'));
@@ -41,13 +47,19 @@ class MeterController extends Controller
 
         return response()->json([
             'message' => 'Meter created successfully.',
-            'data' => $meter->load('customer'),
+            'data' => $meter->load(['customer', 'latestReading']),
         ], 201);
     }
 
-    public function show(Meter $meter): JsonResponse
+    public function show(Request $request, Meter $meter): JsonResponse
     {
-        return response()->json($meter->load(['customer', 'readings', 'bills']));
+        $meter->load(['customer', 'readings', 'bills']);
+
+        if ($request->user()?->isRole('customer') && $meter->customer?->user_id !== $request->user()->id) {
+            abort(403, 'You are not allowed to view this meter.');
+        }
+
+        return response()->json($meter);
     }
 
     public function update(StoreMeterRequest $request, Meter $meter): JsonResponse
@@ -56,7 +68,7 @@ class MeterController extends Controller
 
         return response()->json([
             'message' => 'Meter updated successfully.',
-            'data' => $meter->load('customer'),
+            'data' => $meter->load(['customer', 'latestReading']),
         ]);
     }
 

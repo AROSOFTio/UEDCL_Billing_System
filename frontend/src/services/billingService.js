@@ -1,7 +1,13 @@
-﻿import { apiRequest } from './api';
+import { apiRequest } from './api';
 
-export function fetchBills() {
-  return apiRequest('/bills');
+export function fetchBills(query = {}) {
+  const params = new URLSearchParams(query);
+  const suffix = params.toString() ? `?${params.toString()}` : '';
+  return apiRequest(`/bills${suffix}`);
+}
+
+export function fetchBill(billId) {
+  return apiRequest(`/bills/${billId}`);
 }
 
 export function generateBills(payload) {

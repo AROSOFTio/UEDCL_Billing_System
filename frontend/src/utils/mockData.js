@@ -1,4 +1,4 @@
-﻿import { formatCurrency } from './formatters';
+import { formatCurrency } from './formatters';
 
 export const dashboardStats = {
   customer: [

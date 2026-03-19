@@ -1,7 +1,8 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import AlertMessage from '../../components/common/AlertMessage';
 import { useAuth } from '../../context/AuthContext';
-import { demoUsers, homePathByRole, roleLabels } from '../../utils/constants';
+import { demoCredentials, homePathByRole, roleLabels } from '../../utils/constants';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -13,14 +14,16 @@ export default function LoginPage() {
     role: 'administrator',
   });
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleChange = (event) => {
+  function handleChange(event) {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
-  };
+  }
 
-  const handleSubmit = async (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setSubmitting(true);
     setError('');
 
     try {
@@ -29,8 +32,10 @@ export default function LoginPage() {
       navigate(redirectTo, { replace: true });
     } catch (loginError) {
       setError(loginError.message);
+    } finally {
+      setSubmitting(false);
     }
-  };
+  }
 
   return (
     <section className="auth-page">
@@ -39,7 +44,7 @@ export default function LoginPage() {
           <div>
             <h2 className="page-title">Secure Login</h2>
             <p className="section-copy">
-              Choose a role and use the seeded demo credentials to access the scaffolded dashboards.
+              Sign in with one of the seeded demo users or with your registered customer account.
             </p>
           </div>
         </div>
@@ -57,7 +62,7 @@ export default function LoginPage() {
           </div>
           <div className="field">
             <label htmlFor="email">Email</label>
-            <input id="email" name="email" value={form.email} onChange={handleChange} />
+            <input id="email" name="email" type="email" value={form.email} onChange={handleChange} />
           </div>
           <div className="field">
             <label htmlFor="password">Password</label>
@@ -78,21 +83,24 @@ export default function LoginPage() {
                 setForm({ email, password: 'password123', role });
               }}
             >
-              {demoUsers.map((user) => (
+              {demoCredentials.map((user) => (
                 <option key={user.email} value={`${user.role}|${user.email}`}>
                   {roleLabels[user.role]} | {user.email}
                 </option>
               ))}
             </select>
           </div>
-          <div>
-            <button className="button" type="submit">
-              Login
+          <div className="form-actions" style={{ gridColumn: '1 / -1' }}>
+            <button className="button" type="submit" disabled={submitting}>
+              {submitting ? 'Signing In...' : 'Login'}
             </button>
           </div>
         </form>
 
-        {error ? <p className="alert-text">{error}</p> : null}
+        <AlertMessage tone="info">
+          Demo password for seeded accounts: <strong>password123</strong>
+        </AlertMessage>
+        <AlertMessage tone="error">{error}</AlertMessage>
       </div>
     </section>
   );

@@ -1,72 +1,124 @@
-﻿import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { demoUsers, roleLabels } from '../utils/constants';
-
-const AUTH_STORAGE_KEY = 'uedcl-auth';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  fetchAuthenticatedUser,
+  loginRequest,
+  logoutRequest,
+  registerRequest,
+} from '../services/authService';
+import { clearStoredToken, getStoredToken, setStoredToken } from '../services/api';
 
 const AuthContext = createContext(null);
 
+function normalizeUser(rawUser) {
+  if (!rawUser) {
+    return null;
+  }
+
+  return {
+    id: rawUser.id,
+    name: rawUser.name,
+    email: rawUser.email,
+    phone: rawUser.phone,
+    status: rawUser.status,
+    role: rawUser.role?.slug,
+    roleLabel: rawUser.role?.name,
+    customer: rawUser.customer || null,
+  };
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(() => getStoredToken());
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(AUTH_STORAGE_KEY);
+    async function bootstrapAuth() {
+      const storedToken = getStoredToken();
 
-    if (stored) {
-      setUser(JSON.parse(stored));
+      if (!storedToken) {
+        setAuthLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetchAuthenticatedUser();
+        setUser(normalizeUser(response.data));
+        setToken(storedToken);
+      } catch (error) {
+        clearStoredToken();
+        setToken(null);
+        setUser(null);
+      } finally {
+        setAuthLoading(false);
+      }
     }
+
+    bootstrapAuth();
   }, []);
 
   const login = async ({ email, password, role }) => {
-    const matchedUser =
-      demoUsers.find(
-        (candidate) =>
-          candidate.email === email &&
-          candidate.password === password &&
-          (!role || candidate.role === role),
-      ) ||
-      (email && password && role
-        ? {
-            name: 'Scaffold User',
-            email,
-            password,
-            role,
-            roleLabel: roleLabels[role],
-          }
-        : null);
+    const response = await loginRequest({
+      email,
+      password,
+      device_name: 'uedcl-web-client',
+    });
+    const normalizedUser = normalizeUser(response.data);
 
-    if (!matchedUser) {
-      throw new Error('Invalid login details for the selected role.');
+    if (role && normalizedUser?.role !== role) {
+      throw new Error(`This account belongs to ${normalizedUser?.roleLabel || 'a different role'}.`);
     }
 
-    const normalizedUser = {
-      name: matchedUser.name,
-      email: matchedUser.email,
-      role: matchedUser.role,
-      roleLabel: roleLabels[matchedUser.role],
-    };
-
-    window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(normalizedUser));
+    setStoredToken(response.token);
+    setToken(response.token);
     setUser(normalizedUser);
 
     return normalizedUser;
   };
 
-  const logout = () => {
-    window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  const logout = async () => {
+    try {
+      if (getStoredToken()) {
+        await logoutRequest();
+      }
+    } catch (error) {
+      // Ignore transport failures and clear the local session anyway.
+    }
+
+    clearStoredToken();
+    setToken(null);
     setUser(null);
   };
 
-  const register = async (payload) => payload;
+  const register = async (payload) => {
+    const response = await registerRequest(payload);
+    const normalizedUser = normalizeUser(response.data);
+
+    setStoredToken(response.token);
+    setToken(response.token);
+    setUser(normalizedUser);
+
+    return normalizedUser;
+  };
+
+  const refreshUser = async () => {
+    const response = await fetchAuthenticatedUser();
+    const normalizedUser = normalizeUser(response.data);
+    setUser(normalizedUser);
+    return normalizedUser;
+  };
 
   const value = useMemo(
     () => ({
       user,
+      token,
+      authLoading,
+      isAuthenticated: Boolean(user && token),
       login,
       logout,
       register,
-      isAuthenticated: Boolean(user),
+      refreshUser,
     }),
-    [user],
+    [authLoading, token, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
