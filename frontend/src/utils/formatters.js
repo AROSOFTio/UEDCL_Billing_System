@@ -31,6 +31,13 @@ export function formatNumber(value) {
   return new Intl.NumberFormat('en-UG').format(Number(value || 0));
 }
 
+export function formatPercent(value, maximumFractionDigits = 1) {
+  return `${new Intl.NumberFormat('en-UG', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits,
+  }).format(Number(value || 0))}%`;
+}
+
 export function titleCase(value) {
   return String(value || '')
     .replace(/_/g, ' ')

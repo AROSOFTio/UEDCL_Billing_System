@@ -6,6 +6,7 @@ import LoadingState from '../../components/common/LoadingState';
 import PageHeader from '../../components/common/PageHeader';
 import { fetchPayments } from '../../services/paymentService';
 import { fetchReceipt } from '../../services/receiptService';
+import { downloadReceiptPdf } from '../../utils/exporters';
 import { formatCurrency, formatDateTime, titleCase } from '../../utils/formatters';
 
 const columns = [
@@ -89,7 +90,15 @@ export default function ReceiptsPage() {
       {detailLoading ? <LoadingState message="Loading receipt details..." /> : null}
       {selectedReceipt ? (
         <section className="section-card list-stack">
-          <PageHeader title="Receipt View" subtitle="Printable receipt information generated from the payment record." />
+          <PageHeader
+            title="Receipt View"
+            subtitle="Printable receipt information generated from the payment record."
+            actions={(
+              <button className="button" type="button" onClick={() => downloadReceiptPdf(selectedReceipt)}>
+                Download PDF
+              </button>
+            )}
+          />
           <DetailGrid
             items={[
               { label: 'Receipt Number', value: selectedReceipt.receipt_number },

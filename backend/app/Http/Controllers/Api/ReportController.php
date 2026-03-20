@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Http\Controllers\Api;
 
@@ -17,6 +17,14 @@ class ReportController extends Controller
         return response()->json([
             'message' => 'Report summary generated successfully.',
             'data' => $this->reportService->summary(),
+        ]);
+    }
+
+    public function overview(): JsonResponse
+    {
+        return response()->json([
+            'message' => 'Executive report overview generated successfully.',
+            'data' => $this->reportService->overview(),
         ]);
     }
 }

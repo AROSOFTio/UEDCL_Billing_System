@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BillController;
@@ -70,5 +70,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('users', [UserController::class, 'store']);
         Route::get('users/{user}', [UserController::class, 'show']);
         Route::get('reports/summary', [ReportController::class, 'summary']);
+        Route::get('reports/overview', [ReportController::class, 'overview']);
     });
 });
