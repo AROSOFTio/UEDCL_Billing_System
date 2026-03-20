@@ -5,7 +5,7 @@ export default function AboutPage() {
     <div className="section-card">
       <PageHeader
         title="About the Platform"
-        subtitle="The Online Electricity Billing and Payment System for UEDCL centralizes revenue operations, customer care, and utility monitoring in one secure web platform."
+        subtitle="A secure utility platform for electricity billing, metering, customer service, and administrative oversight."
       />
       <div className="card-grid">
         <article className="stat-card">

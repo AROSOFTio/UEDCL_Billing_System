@@ -5,7 +5,7 @@ export default function ContactPage() {
     <div className="section-card">
       <PageHeader
         title="Contact"
-        subtitle="Customer care and operational support contacts for the Online Electricity Billing and Payment System for UEDCL."
+        subtitle="Customer care, billing office, and operational support contacts for the utility service portal."
       />
       <div className="card-grid">
         <article className="stat-card">
