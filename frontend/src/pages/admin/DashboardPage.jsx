@@ -27,10 +27,7 @@ export default function DashboardPage() {
       setError('');
 
       try {
-        const [reportResponse, tariffResponse] = await Promise.all([
-          fetchReportSummary(),
-          fetchTariffs(),
-        ]);
+        const [reportResponse, tariffResponse] = await Promise.all([fetchReportSummary(), fetchTariffs()]);
         setSummary(reportResponse.data);
         setTariffs(tariffResponse);
       } catch (loadError) {
@@ -49,23 +46,18 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader
-        title="Administrator Dashboard"
-        subtitle="Track high-level operational performance, compliance indicators, and current tariff settings."
-      />
+      <PageHeader title="Dashboard" />
       <AlertMessage tone="error">{error}</AlertMessage>
       {summary ? (
-        <div className="card-grid">
-          <StatCard label="Customers" value={formatNumber(summary.total_customers)} helper="Total registered customers" />
-          <StatCard label="Meters" value={formatNumber(summary.total_meters)} helper="Meter inventory across service areas" />
-          <StatCard label="Bills Generated" value={formatNumber(summary.total_bills_generated)} helper="All billing cycles to date" />
-          <StatCard label="Unpaid Bills" value={formatNumber(summary.total_unpaid_bills)} helper="Requires collection follow-up" />
-          <StatCard label="Payments" value={formatNumber(summary.total_payments)} helper="Recorded payment entries" />
-          <StatCard label="Unresolved Complaints" value={formatNumber(summary.unresolved_complaints)} helper="Pending or in-progress service cases" />
+        <div className="card-grid compact-dashboard-grid">
+          <StatCard label="Customers" value={formatNumber(summary.total_customers)} helper="Accounts" />
+          <StatCard label="Meters" value={formatNumber(summary.total_meters)} helper="Installed" />
+          <StatCard label="Unpaid Bills" value={formatNumber(summary.total_unpaid_bills)} helper="Due" />
+          <StatCard label="Open Complaints" value={formatNumber(summary.unresolved_complaints)} helper="Cases" />
         </div>
       ) : null}
       <section className="table-card">
-        <PageHeader title="Current Tariffs" subtitle="Tariff settings available to the billing engine." />
+        <PageHeader title="Active Tariffs" />
         <DataTable columns={columns} rows={tariffs} />
       </section>
     </>

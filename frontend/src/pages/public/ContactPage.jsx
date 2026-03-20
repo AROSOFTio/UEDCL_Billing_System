@@ -3,11 +3,8 @@ import PageHeader from '../../components/common/PageHeader';
 export default function ContactPage() {
   return (
     <div className="section-card">
-      <PageHeader
-        title="Contact"
-        subtitle="Customer care, billing office, and operational support contacts for the utility service portal."
-      />
-      <div className="card-grid">
+      <PageHeader title="Contact" subtitle="Operational and customer care contacts." />
+      <div className="card-grid compact-dashboard-grid">
         <article className="stat-card">
           <h3>Customer Support</h3>
           <p>support@uedcl.local</p>

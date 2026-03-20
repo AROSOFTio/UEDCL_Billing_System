@@ -4,21 +4,21 @@ export default function AboutPage() {
   return (
     <div className="section-card">
       <PageHeader
-        title="About the Platform"
-        subtitle="A secure utility platform for electricity billing, metering, customer service, and administrative oversight."
+        title="About"
+        subtitle="A controlled utility platform for billing, metering, customer service, and reporting."
       />
-      <div className="card-grid">
+      <div className="card-grid compact-dashboard-grid">
         <article className="stat-card">
-          <h3>Billing Accuracy</h3>
-          <p>Supports meter reading capture, unit consumption calculation, and professional bill generation workflows.</p>
+          <h3>Billing</h3>
+          <p>Meter reading capture, tariff application, and bill generation.</p>
         </article>
         <article className="stat-card">
-          <h3>Customer Experience</h3>
-          <p>Customers can securely view their profile, bills, payments, receipts, notifications, and complaints.</p>
+          <h3>Customer Service</h3>
+          <p>Customer self-service for bills, receipts, notifications, and complaints.</p>
         </article>
         <article className="stat-card">
-          <h3>Operational Oversight</h3>
-          <p>Billing, helpdesk, and administrative teams can manage service delivery from dedicated workspaces.</p>
+          <h3>Administration</h3>
+          <p>Tariffs, payments, complaints, and operational reporting in one place.</p>
         </article>
       </div>
     </div>

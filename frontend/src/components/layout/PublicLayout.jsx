@@ -1,6 +1,6 @@
 import { NavLink, Navigate, Outlet } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import { APP_BRAND, APP_TAGLINE, homePathByRole } from '../../utils/constants';
+import { APP_BRAND, homePathByRole } from '../../utils/constants';
 import { useAuth } from '../../context/AuthContext';
 import LoadingState from '../common/LoadingState';
 
@@ -22,36 +22,38 @@ export default function PublicLayout() {
   return (
     <div className="public-shell">
       <header className="public-header">
-        <div className="brand-lockup">
-          <img className="brand-logo" src={logo} alt="UEDCL logo" />
-          <div className="brand-block">
-            <span className="brand-eyebrow">Uganda Electricity Distribution Company Limited</span>
-            <h1>{APP_BRAND}</h1>
-            <p>{APP_TAGLINE}</p>
-          </div>
+        <div className="public-header-inner">
+          <NavLink className="brand-lockup" to="/" aria-label={APP_BRAND}>
+            <img className="brand-logo" src={logo} alt="UEDCL logo" />
+          </NavLink>
+          <nav className="public-nav">
+            <NavLink className={publicLinkClass} end to="/">
+              Home
+            </NavLink>
+            <NavLink className={publicLinkClass} to="/about">
+              About
+            </NavLink>
+            <NavLink className={publicLinkClass} to="/contact">
+              Contact
+            </NavLink>
+            <NavLink className={publicLinkClass} to="/login">
+              Login
+            </NavLink>
+            <NavLink className={publicLinkClass} to="/register">
+              Register
+            </NavLink>
+          </nav>
         </div>
-        <nav className="public-nav">
-          <NavLink className={publicLinkClass} end to="/">
-            Home
-          </NavLink>
-          <NavLink className={publicLinkClass} to="/about">
-            About
-          </NavLink>
-          <NavLink className={publicLinkClass} to="/contact">
-            Contact
-          </NavLink>
-          <NavLink className={publicLinkClass} to="/login">
-            Login
-          </NavLink>
-          <NavLink className={publicLinkClass} to="/register">
-            Register
-          </NavLink>
-        </nav>
       </header>
       <main className="public-main">
         <Outlet />
       </main>
-      <footer className="footer">{APP_BRAND} | Institutional billing, payment, metering, and customer service management.</footer>
+      <footer className="footer">
+        <div className="footer-inner">
+          <span className="footer-title">UEDCL Service Portal</span>
+          <span className="footer-copy">Electricity billing, receipts, and customer service.</span>
+        </div>
+      </footer>
     </div>
   );
 }

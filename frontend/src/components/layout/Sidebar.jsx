@@ -1,15 +1,8 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import { APP_BRAND, navigationByRole } from '../../utils/constants';
+import { homePathByRole, navigationByRole } from '../../utils/constants';
 import { useAuth } from '../../context/AuthContext';
 import AppIcon from '../common/AppIcon';
-
-const workspaceCopyByRole = {
-  customer: 'Customer account services',
-  billing_officer: 'Billing and metering operations',
-  helpdesk_officer: 'Complaints and service desk',
-  administrator: 'Administration and control',
-};
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
@@ -33,25 +26,13 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-brand-panel">
+      <NavLink className="sidebar-brand-panel" to={homePathByRole[user?.role] || '/'} aria-label="Workspace home">
         <div className="sidebar-brand-mark">
           <img className="sidebar-logo" src={logo} alt="UEDCL logo" />
         </div>
-        <div className="sidebar-brand-copy">
-          <strong>{APP_BRAND}</strong>
-          <small>{workspaceCopyByRole[user?.role] || 'Utility operations workspace'}</small>
-        </div>
-      </div>
-
-      <div className="sidebar-user">
-        <span className="sidebar-section-label">Signed In Account</span>
-        <strong>{user?.name}</strong>
-        <p>{user?.roleLabel}</p>
-        {user?.customer?.account_number ? <small>Account {user.customer.account_number}</small> : null}
-      </div>
+      </NavLink>
 
       <nav className="sidebar-nav">
-        <span className="sidebar-section-label">Navigation</span>
         {items.map((item) => (
           <NavLink
             key={item.path}
