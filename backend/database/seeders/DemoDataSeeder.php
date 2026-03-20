@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace Database\Seeders;
 
@@ -83,6 +83,17 @@ class DemoDataSeeder extends Seeder
         );
 
         MeterReading::query()->updateOrCreate(
+            ['meter_id' => $meter->id, 'reading_date' => '2026-02-01'],
+            [
+                'captured_by' => $billingOfficer->id,
+                'previous_reading' => 4000,
+                'current_reading' => 4320,
+                'units_consumed' => 320,
+                'notes' => 'Routine monthly reading',
+            ]
+        );
+
+        MeterReading::query()->updateOrCreate(
             ['meter_id' => $meter->id, 'reading_date' => '2026-03-01'],
             [
                 'captured_by' => $billingOfficer->id,
@@ -111,6 +122,25 @@ class DemoDataSeeder extends Seeder
                 'fixed_charge' => 20000,
                 'effective_from' => '2026-01-01',
                 'status' => 'active',
+            ]
+        );
+
+        $overdueBill = Bill::query()->updateOrCreate(
+            ['bill_number' => 'BILL-2026-0000'],
+            [
+                'customer_id' => $customer->id,
+                'meter_id' => $meter->id,
+                'tariff_id' => $tariff->id,
+                'billing_cycle' => '2026-02',
+                'previous_reading' => 4000,
+                'current_reading' => 4320,
+                'units_consumed' => 320,
+                'tariff_rate' => 550,
+                'fixed_charge' => 20000,
+                'energy_charge' => 176000,
+                'total_amount' => 196000,
+                'due_date' => '2026-03-05',
+                'status' => 'overdue',
             ]
         );
 
@@ -203,6 +233,18 @@ class DemoDataSeeder extends Seeder
             ]
         );
 
+        Notification::query()->updateOrCreate(
+            ['recipient' => $customer->phone, 'type' => 'overdue_reminder'],
+            [
+                'customer_id' => $customer->id,
+                'channel' => 'sms',
+                'message' => 'Reminder: your bill of UGX 196,000 is overdue. Please pay.',
+                'status' => 'success',
+                'metadata' => ['mode' => 'mock', 'bill_number' => $overdueBill->bill_number],
+                'sent_at' => now(),
+            ]
+        );
+
         $complaint = Complaint::query()->updateOrCreate(
             ['complaint_number' => 'CMP-2026-0001'],
             [
@@ -218,6 +260,24 @@ class DemoDataSeeder extends Seeder
             ['complaint_id' => $complaint->id, 'user_id' => $helpdeskOfficer->id],
             [
                 'reply' => 'Your complaint has been received and assigned for review.',
+            ]
+        );
+
+        $resolvedComplaint = Complaint::query()->updateOrCreate(
+            ['complaint_number' => 'CMP-2026-0002'],
+            [
+                'customer_id' => $customer->id,
+                'subject' => 'Intermittent supply issue',
+                'message' => 'Power was unstable for two evenings this week.',
+                'category' => 'outage',
+                'status' => 'resolved',
+            ]
+        );
+
+        ComplaintReply::query()->updateOrCreate(
+            ['complaint_id' => $resolvedComplaint->id, 'user_id' => $helpdeskOfficer->id],
+            [
+                'reply' => 'The feeder inspection is complete and service has been restored. This case is now resolved.',
             ]
         );
     }

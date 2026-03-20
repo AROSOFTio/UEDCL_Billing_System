@@ -1,15 +1,20 @@
-﻿<?php
+<?php
 
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Models\Customer;
+use App\Services\Customers\CustomerProvisioningService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
+    public function __construct(private readonly CustomerProvisioningService $customerProvisioningService)
+    {
+    }
+
     public function index(Request $request): JsonResponse
     {
         $query = Customer::query()->with('user')->latest();
@@ -34,11 +39,12 @@ class CustomerController extends Controller
 
     public function store(StoreCustomerRequest $request): JsonResponse
     {
-        $customer = Customer::query()->create($request->validated());
+        $result = $this->customerProvisioningService->create($request->validated());
 
         return response()->json([
             'message' => 'Customer created successfully.',
-            'data' => $customer->load('user'),
+            'data' => $result['customer'],
+            'credentials' => $result['credentials'],
         ], 201);
     }
 
@@ -49,11 +55,11 @@ class CustomerController extends Controller
 
     public function update(StoreCustomerRequest $request, Customer $customer): JsonResponse
     {
-        $customer->update($request->validated());
+        $customer = $this->customerProvisioningService->update($customer, $request->validated());
 
         return response()->json([
             'message' => 'Customer updated successfully.',
-            'data' => $customer->load('user'),
+            'data' => $customer,
         ]);
     }
 

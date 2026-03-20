@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import AlertMessage from '../../components/common/AlertMessage';
 import DataTable from '../../components/common/DataTable';
+import DetailGrid from '../../components/common/DetailGrid';
 import LoadingState from '../../components/common/LoadingState';
 import PageHeader from '../../components/common/PageHeader';
 import { createMeterReading, fetchMeterReadings } from '../../services/meterReadingService';
@@ -16,21 +18,27 @@ const columns = [
   { key: 'reading_date', label: 'Reading Date', render: (reading) => formatDate(reading.reading_date) },
 ];
 
-const initialForm = {
-  meter_id: '',
-  current_reading: '',
-  reading_date: new Date().toISOString().slice(0, 10),
-  notes: '',
-};
+function buildInitialForm(meterId = '') {
+  return {
+    meter_id: meterId,
+    current_reading: '',
+    reading_date: new Date().toISOString().slice(0, 10),
+    notes: '',
+  };
+}
 
 export default function MeterReadingsPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const preselectedMeterId = searchParams.get('meterId') || '';
   const [meters, setMeters] = useState([]);
   const [readings, setReadings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
-  const [form, setForm] = useState(initialForm);
+  const [createdReading, setCreatedReading] = useState(null);
+  const [form, setForm] = useState(() => buildInitialForm(preselectedMeterId));
 
   useEffect(() => {
     async function loadData() {
@@ -55,6 +63,14 @@ export default function MeterReadingsPage() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (!preselectedMeterId) {
+      return;
+    }
+
+    setForm((current) => (current.meter_id ? current : { ...current, meter_id: preselectedMeterId }));
+  }, [preselectedMeterId]);
+
   function handleChange(event) {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
@@ -65,6 +81,7 @@ export default function MeterReadingsPage() {
     setSubmitting(true);
     setError('');
     setMessage('');
+    setCreatedReading(null);
 
     try {
       const response = await createMeterReading({
@@ -72,9 +89,10 @@ export default function MeterReadingsPage() {
         meter_id: Number(form.meter_id),
         current_reading: Number(form.current_reading),
       });
+      setCreatedReading(response.data);
       setReadings((current) => [response.data, ...current]);
-      setForm(initialForm);
-      setMessage('Meter reading recorded successfully.');
+      setForm(buildInitialForm(String(response.data.meter_id || form.meter_id)));
+      setMessage(`Meter reading recorded successfully. ${formatNumber(response.data.units_consumed)} units are now ready for billing.`);
       const meterResponse = await fetchMeters();
       setMeters(meterResponse);
     } catch (submitError) {
@@ -82,6 +100,21 @@ export default function MeterReadingsPage() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function handleContinueToBilling() {
+    const params = new URLSearchParams();
+
+    if (createdReading?.meter?.customer?.id) {
+      params.set('customerId', createdReading.meter.customer.id);
+    }
+
+    if (createdReading?.meter_id) {
+      params.set('meterId', createdReading.meter_id);
+    }
+
+    const suffix = params.toString() ? `?${params.toString()}` : '';
+    navigate(`/billing/generate-bills${suffix}`);
   }
 
   const selectedMeter = meters.find((meter) => String(meter.id) === String(form.meter_id));
@@ -132,6 +165,28 @@ export default function MeterReadingsPage() {
         </form>
         <AlertMessage tone="success">{message}</AlertMessage>
         <AlertMessage tone="error">{error}</AlertMessage>
+        {createdReading ? (
+          <section className="section-card list-stack">
+            <PageHeader
+              title="Recorded Reading"
+              subtitle="The next step is to generate a bill using the latest captured reading and the active tariff."
+            />
+            <DetailGrid
+              items={[
+                { label: 'Meter Number', value: createdReading.meter?.meter_number },
+                { label: 'Customer', value: createdReading.meter?.customer?.name },
+                { label: 'Previous Reading', value: formatNumber(createdReading.previous_reading) },
+                { label: 'Current Reading', value: formatNumber(createdReading.current_reading) },
+                { label: 'Units Consumed', value: formatNumber(createdReading.units_consumed) },
+              ]}
+            />
+            <div className="form-actions">
+              <button className="button" type="button" onClick={handleContinueToBilling}>
+                Generate Bill for This Meter
+              </button>
+            </div>
+          </section>
+        ) : null}
       </section>
       <section className="table-card">
         <PageHeader title="Reading History" subtitle="Latest recorded readings across assigned service meters." />

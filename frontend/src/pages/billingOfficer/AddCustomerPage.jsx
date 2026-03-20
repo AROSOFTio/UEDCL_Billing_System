@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AlertMessage from '../../components/common/AlertMessage';
+import DetailGrid from '../../components/common/DetailGrid';
 import PageHeader from '../../components/common/PageHeader';
 import { createCustomer } from '../../services/customerService';
 import { customerStatuses } from '../../utils/constants';
@@ -21,6 +22,8 @@ export default function AddCustomerPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [createdCustomer, setCreatedCustomer] = useState(null);
+  const [portalCredentials, setPortalCredentials] = useState(null);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -32,14 +35,15 @@ export default function AddCustomerPage() {
     setSubmitting(true);
     setError('');
     setMessage('');
+    setCreatedCustomer(null);
+    setPortalCredentials(null);
 
     try {
-      await createCustomer(form);
-      setMessage('Customer created successfully. Redirecting to customer list...');
+      const response = await createCustomer(form);
+      setCreatedCustomer(response.data);
+      setPortalCredentials(response.credentials);
+      setMessage('Customer created successfully. Portal access has been provisioned for immediate testing.');
       setForm({ ...initialForm, account_number: `UEDCL-${String(Date.now()).slice(-6)}` });
-      window.setTimeout(() => {
-        navigate('/billing/customers', { replace: true });
-      }, 700);
     } catch (submitError) {
       setError(submitError.message);
     } finally {
@@ -48,7 +52,7 @@ export default function AddCustomerPage() {
   }
 
   return (
-    <section className="form-card">
+    <section className="form-card list-stack">
       <PageHeader
         title="Add Customer"
         subtitle="Create a new customer account record with a formal account number and service details."
@@ -68,7 +72,7 @@ export default function AddCustomerPage() {
         </div>
         <div className="field">
           <label htmlFor="email">Email</label>
-          <input id="email" name="email" value={form.email} onChange={handleChange} />
+          <input id="email" name="email" type="email" value={form.email} onChange={handleChange} />
         </div>
         <div className="field">
           <label htmlFor="national_id">National ID</label>
@@ -92,10 +96,41 @@ export default function AddCustomerPage() {
           <button className="button" type="submit" disabled={submitting}>
             {submitting ? 'Saving...' : 'Create Customer'}
           </button>
+          <button className="button-outline" type="button" onClick={() => navigate('/billing/customers')}>
+            View Customer List
+          </button>
         </div>
       </form>
       <AlertMessage tone="success">{message}</AlertMessage>
       <AlertMessage tone="error">{error}</AlertMessage>
+      {createdCustomer ? (
+        <section className="section-card list-stack">
+          <PageHeader
+            title="Created Customer Account"
+            subtitle="Use these details to continue the demo flow in the customer portal immediately."
+          />
+          <DetailGrid
+            items={[
+              { label: 'Account Number', value: createdCustomer.account_number },
+              { label: 'Customer Name', value: createdCustomer.name },
+              { label: 'Portal Email', value: portalCredentials?.email || createdCustomer.user?.email || createdCustomer.email },
+              { label: 'Portal Password', value: portalCredentials?.temporary_password || 'Existing password retained' },
+            ]}
+          />
+          <div className="form-actions">
+            <button
+              className="button"
+              type="button"
+              onClick={() => navigate(`/billing/meters/new?customerId=${createdCustomer.id}`)}
+            >
+              Add Meter for This Customer
+            </button>
+            <button className="button-outline" type="button" onClick={() => navigate('/billing/customers')}>
+              Return to Customer List
+            </button>
+          </div>
+        </section>
+      ) : null}
     </section>
   );
 }

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Services\Reports;
 
@@ -16,7 +16,7 @@ class ReportService
             'total_customers' => Customer::query()->count(),
             'total_meters' => Meter::query()->count(),
             'total_bills_generated' => Bill::query()->count(),
-            'total_unpaid_bills' => Bill::query()->where('status', 'unpaid')->count(),
+            'total_unpaid_bills' => Bill::query()->whereIn('status', ['unpaid', 'partially_paid', 'overdue'])->count(),
             'total_payments' => Payment::query()->count(),
             'unresolved_complaints' => Complaint::query()->whereIn('status', ['pending', 'in_progress'])->count(),
         ];

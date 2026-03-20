@@ -11,6 +11,7 @@ const columns = [
   { key: 'name', label: 'Customer Name' },
   { key: 'phone', label: 'Phone' },
   { key: 'email', label: 'Email' },
+  { key: 'portal_login', label: 'Portal Login', render: (customer) => customer.user?.email || customer.email || '-' },
   { key: 'status', label: 'Status', type: 'status' },
 ];
 

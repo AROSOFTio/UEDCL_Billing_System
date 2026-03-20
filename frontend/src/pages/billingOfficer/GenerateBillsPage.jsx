@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import AlertMessage from '../../components/common/AlertMessage';
 import DataTable from '../../components/common/DataTable';
 import LoadingState from '../../components/common/LoadingState';
@@ -19,21 +20,26 @@ const columns = [
   { key: 'status', label: 'Status', type: 'status' },
 ];
 
-const initialForm = {
-  billing_cycle: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`,
-  tariff_id: '',
-  due_date: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString().slice(0, 10),
-  customer_id: '',
-  meter_id: '',
-  status: 'unpaid',
-};
+function buildInitialForm(customerId = '', meterId = '') {
+  return {
+    billing_cycle: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`,
+    tariff_id: '',
+    due_date: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString().slice(0, 10),
+    customer_id: customerId,
+    meter_id: meterId,
+    status: 'unpaid',
+  };
+}
 
 export default function GenerateBillsPage() {
+  const [searchParams] = useSearchParams();
+  const preselectedCustomerId = searchParams.get('customerId') || '';
+  const preselectedMeterId = searchParams.get('meterId') || '';
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState(() => buildInitialForm(preselectedCustomerId, preselectedMeterId));
   const [tariffs, setTariffs] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [meters, setMeters] = useState([]);
@@ -58,6 +64,8 @@ export default function GenerateBillsPage() {
         setForm((current) => ({
           ...current,
           tariff_id: current.tariff_id || tariffResponse.find((tariff) => tariff.status === 'active')?.id || '',
+          customer_id: current.customer_id || preselectedCustomerId,
+          meter_id: current.meter_id || preselectedMeterId,
         }));
       } catch (loadError) {
         setError(loadError.message);
@@ -67,7 +75,7 @@ export default function GenerateBillsPage() {
     }
 
     loadData();
-  }, []);
+  }, [preselectedCustomerId, preselectedMeterId]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -88,9 +96,15 @@ export default function GenerateBillsPage() {
         meter_id: form.meter_id ? Number(form.meter_id) : undefined,
       };
       const response = await generateBills(payload);
-      setGeneratedBills(response.data || []);
+      const generated = response.data || [];
+      const latestBill = generated[0];
+      setGeneratedBills(generated);
       setSkipped(response.skipped || []);
-      setMessage(`Bill generation completed. ${response.generated_count} bill(s) created.`);
+      setMessage(
+        latestBill
+          ? `Bill generation completed. ${response.generated_count} bill(s) created, including ${latestBill.bill_number} for ${latestBill.customer?.name || 'the selected customer'}.`
+          : `Bill generation completed. ${response.generated_count} bill(s) created.`,
+      );
     } catch (submitError) {
       setError(submitError.message);
     } finally {

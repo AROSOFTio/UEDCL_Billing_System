@@ -10,6 +10,7 @@ import { formatCurrency, formatDateTime, titleCase } from '../../utils/formatter
 
 const columns = [
   { key: 'payment_number', label: 'Payment Number' },
+  { key: 'receipt_number', label: 'Receipt Number', render: (payment) => payment.receipt?.receipt_number || '-' },
   { key: 'bill', label: 'Bill Number', render: (payment) => payment.bill?.bill_number || '-' },
   { key: 'customer', label: 'Customer', render: (payment) => payment.bill?.customer?.name || '-' },
   { key: 'payment_method', label: 'Method', render: (payment) => titleCase(payment.payment_method) },
@@ -89,7 +90,7 @@ export default function PaymentsPage() {
       const refreshedBills = await fetchBills();
       setBills(refreshedBills.filter((bill) => calculateOutstandingAmount(bill) > 0));
       setForm(initialForm);
-      setMessage('Payment recorded successfully and receipt generated.');
+      setMessage(`Payment recorded successfully. Receipt ${response.data?.receipt?.receipt_number || 'generated'} is now available.`);
     } catch (submitError) {
       setError(submitError.message);
     } finally {
