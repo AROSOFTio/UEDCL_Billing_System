@@ -751,6 +751,12 @@ button {
   padding: 0 24px;
 }
 
+.topbar-start {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .dashboard-content {
   flex: 1;
   width: var(--dashboard-width);
@@ -773,7 +779,7 @@ button {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .sidebar.open { transform: translateX(0); }
-  .mobile-nav-toggle, .sidebar-close { display: inline-flex; }
+  .mobile-nav-toggle, .sidebar-close, .topbar-menu { display: inline-flex; }
   .topbar-inner { padding: 0 16px; }
 }
 
@@ -781,6 +787,7 @@ button {
   .form-grid { grid-template-columns: 1fr; }
   .hero-panel { padding: 40px 24px; }
   .section-card { padding: 24px; }
+  .topbar-user-meta > div:first-child { display: none; }
 }
 
 /* Dashboard Report Enhancements */
