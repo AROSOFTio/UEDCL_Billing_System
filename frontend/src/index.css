@@ -102,15 +102,11 @@ button {
 }
 
 .public-header {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--color-surface);
   position: sticky;
   top: 0;
   z-index: 50;
-  border-bottom: 4px solid transparent;
-  border-image: linear-gradient(to right, #121422 33.3%, #FCDC04 33.3%, #FCDC04 66.6%, #D90000 66.6%) 1;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .public-header-inner, .public-main, .footer-inner {
@@ -120,10 +116,9 @@ button {
 
 .footer {
   background: var(--color-surface);
-  border-top: 4px solid transparent;
-  border-image: linear-gradient(to right, #121422 33.3%, #FCDC04 33.3%, #FCDC04 66.6%, #D90000 66.6%) 1;
   padding: 40px 0;
   margin-top: auto;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .footer-inner {
@@ -132,6 +127,7 @@ button {
   align-items: center;
   text-align: center;
   gap: 8px;
+  position: relative;
 }
 
 .footer-title {
@@ -152,6 +148,26 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  position: relative;
+}
+
+.public-header-inner::after, .topbar-inner::after, .footer-inner::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, var(--color-primary), var(--color-info), var(--color-accent));
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+.public-header-inner::after, .topbar-inner::after {
+  bottom: 0;
+}
+
+.footer-inner::before {
+  top: -40px;
 }
 
 .mobile-nav-toggle, .public-nav-close, .sidebar-close, .topbar-menu {
@@ -761,15 +777,11 @@ button {
 }
 
 .topbar {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--color-surface);
   position: sticky;
   top: 0;
   z-index: 30;
-  border-bottom: 4px solid transparent;
-  border-image: linear-gradient(to right, #121422 33.3%, #FCDC04 33.3%, #FCDC04 66.6%, #D90000 66.6%) 1;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .topbar-inner {
@@ -780,6 +792,7 @@ button {
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
+  position: relative;
 }
 
 .topbar-start {
