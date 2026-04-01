@@ -102,11 +102,11 @@ button {
 }
 
 .public-header {
-  background: var(--color-surface);
+  background: var(--color-primary-soft);
   position: sticky;
   top: 0;
   z-index: 50;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 0 rgba(74, 58, 255, 0.1);
 }
 
 .public-header-inner, .public-main, .footer-inner {
@@ -115,10 +115,10 @@ button {
 }
 
 .footer {
-  background: var(--color-surface);
+  background: var(--color-primary-soft);
   padding: 40px 0;
   margin-top: auto;
-  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -1px 0 rgba(74, 58, 255, 0.1);
 }
 
 .footer-inner {
@@ -176,17 +176,17 @@ button {
   height: 44px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.5);
   color: var(--color-text);
   cursor: pointer;
   transition: var(--transition-fast);
 }
 
 .mobile-nav-toggle:hover, .topbar-menu:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
 }
 
 .offcanvas-backdrop {
@@ -777,11 +777,11 @@ button {
 }
 
 .topbar {
-  background: var(--color-surface);
+  background: var(--color-primary-soft);
   position: sticky;
   top: 0;
   z-index: 30;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 0 rgba(74, 58, 255, 0.1);
 }
 
 .topbar-inner {
