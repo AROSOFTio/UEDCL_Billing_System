@@ -105,15 +105,44 @@ button {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 50;
+  border-bottom: 4px solid transparent;
+  border-image: linear-gradient(to right, #121422 33.3%, #FCDC04 33.3%, #FCDC04 66.6%, #D90000 66.6%) 1;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .public-header-inner, .public-main, .footer-inner {
   width: var(--page-width);
   margin: 0 auto;
+}
+
+.footer {
+  background: var(--color-surface);
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(to right, #121422 33.3%, #FCDC04 33.3%, #FCDC04 66.6%, #D90000 66.6%) 1;
+  padding: 40px 0;
+  margin-top: auto;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.footer-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.footer-copy {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
 }
 
 .public-header-inner {
@@ -735,10 +764,12 @@ button {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 30;
+  border-bottom: 4px solid transparent;
+  border-image: linear-gradient(to right, #121422 33.3%, #FCDC04 33.3%, #FCDC04 66.6%, #D90000 66.6%) 1;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .topbar-inner {
@@ -781,6 +812,21 @@ button {
   .sidebar.open { transform: translateX(0); }
   .mobile-nav-toggle, .sidebar-close, .topbar-menu { display: inline-flex; }
   .topbar-inner { padding: 0 16px; }
+
+  .public-nav-panel {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 60;
+    width: 280px; background: var(--color-surface);
+    flex-direction: column; align-items: flex-start; padding: 24px;
+    transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-lg);
+  }
+  .public-nav-panel.open { transform: translateX(0); }
+  .public-nav-panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; margin-bottom: 32px;
+  }
+  .public-nav { flex-direction: column; align-items: flex-start; width: 100%; }
+  .public-nav a { width: 100%; }
 }
 
 @media (max-width: 768px) {

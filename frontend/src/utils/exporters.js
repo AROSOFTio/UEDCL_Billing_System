@@ -344,3 +344,84 @@ export async function downloadReceiptPdf(receipt) {
 
   doc.save(`uedcl-receipt-${receipt.receipt_number || reportFilenameDate()}.pdf`);
 }
+
+export async function exportDynamicReportPdf(reportType, data, filters = {}) {
+  const doc = new jsPDF();
+  const generatedAt = new Date().toISOString();
+  
+  const reportTitles = {
+    billing_history: 'Billing History Report',
+    payment_history: 'Payment History Ledger',
+    complaint_log: 'Service Complaint Log',
+    revenue_summary: 'Revenue Collection Summary',
+  };
+
+  const title = reportTitles[reportType] || 'Custom Report Extract';
+  let subtitle = 'Custom parameterized report export.';
+  if (filters.start_date || filters.end_date) {
+    subtitle = `Period: ${filters.start_date || 'Inception'} to ${filters.end_date || 'Present'}`;
+  }
+  if (filters.status && filters.status !== 'all') {
+    subtitle += ` | Filter: ${titleCase(filters.status)}`;
+  }
+
+  await addPdfBrandHeader(doc, generatedAt, title, subtitle);
+
+  if (!data || data.length === 0) {
+    doc.text('No matching records found for the selected parameters.', 14, 48);
+    doc.save(`uedcl-${reportType}-${reportFilenameDate()}.pdf`);
+    return;
+  }
+
+  let head = [];
+  let body = [];
+
+  if (reportType === 'billing_history') {
+    head = [['Bill Ref', 'Date', 'Customer', 'Account', 'Amount', 'Status']];
+    body = data.map((b) => [
+      b.bill_number,
+      formatDateTime(b.created_at),
+      b.customer?.name || '-',
+      b.customer?.account_number || '-',
+      formatCurrency(b.total_amount),
+      titleCase(b.status),
+    ]);
+  } else if (reportType === 'payment_history') {
+    head = [['Payment Ref', 'Date', 'Method', 'Customer', 'Bill Number', 'Amount']];
+    body = data.map((p) => [
+      p.payment_number,
+      formatDateTime(p.paid_at),
+      titleCase(p.payment_method),
+      p.bill?.customer?.name || '-',
+      p.bill?.bill_number || '-',
+      formatCurrency(p.amount),
+    ]);
+  } else if (reportType === 'complaint_log') {
+    head = [['Log ID', 'Logged At', 'Customer', 'Category', 'Subject', 'Status']];
+    body = data.map((c) => [
+      c.id,
+      formatDateTime(c.created_at),
+      c.customer?.name || '-',
+      titleCase(c.category),
+      c.subject,
+      titleCase(c.status),
+    ]);
+  } else if (reportType === 'revenue_summary') {
+    head = [['Financial Metric', 'Reported Value']];
+    body = data.map((r) => [
+      r.metric,
+      typeof r.value === 'number' ? (r.metric.includes('Count') ? formatNumber(r.value) : formatCurrency(r.value)) : r.value,
+    ]);
+  }
+
+  autoTable(doc, {
+    startY: 44,
+    head: head,
+    body: body,
+    theme: 'grid',
+    headStyles: { fillColor: [53, 67, 187] },
+    styles: { fontSize: 8, cellPadding: 3 },
+  });
+
+  doc.save(`uedcl-${reportType}-${reportFilenameDate()}.pdf`);
+}

@@ -53,6 +53,7 @@ export const navigationByRole = {
     { label: 'Receipts', path: '/customer/receipts', icon: 'receipts' },
     { label: 'Notifications', path: '/customer/notifications', icon: 'notifications' },
     { label: 'Complaints', path: '/customer/complaints', icon: 'complaints' },
+    { label: 'Report Builder', path: '/customer/report-builder', icon: 'reports' },
   ],
   billing_officer: [
     { label: 'Dashboard', path: '/billing/dashboard', icon: 'dashboard' },
@@ -64,11 +65,13 @@ export const navigationByRole = {
     { label: 'Generate Bills', path: '/billing/generate-bills', icon: 'generate' },
     { label: 'Bills', path: '/billing/bills', icon: 'bills' },
     { label: 'Payments', path: '/billing/payments', icon: 'payments' },
+    { label: 'Report Builder', path: '/billing/report-builder', icon: 'reports' },
   ],
   helpdesk_officer: [
     { label: 'Dashboard', path: '/helpdesk/dashboard', icon: 'dashboard' },
     { label: 'Complaints List', path: '/helpdesk/complaints', icon: 'complaints' },
     { label: 'Resolved Complaints', path: '/helpdesk/resolved', icon: 'resolved' },
+    { label: 'Report Builder', path: '/helpdesk/report-builder', icon: 'reports' },
   ],
   administrator: [
     { label: 'Dashboard', path: '/admin/dashboard', icon: 'dashboard' },
@@ -76,7 +79,8 @@ export const navigationByRole = {
     { label: 'Add User', path: '/admin/users/new', icon: 'add-user' },
     { label: 'Tariffs', path: '/admin/tariffs', icon: 'tariffs' },
     { label: 'SMS Settings', path: '/admin/sms-settings', icon: 'sms' },
-    { label: 'Reports', path: '/admin/reports', icon: 'reports' },
+    { label: 'Executive Reports', path: '/admin/reports', icon: 'dashboard' },
+    { label: 'Report Builder', path: '/admin/report-builder', icon: 'reports' },
     { label: 'Settings', path: '/admin/settings', icon: 'settings' },
   ],
 };

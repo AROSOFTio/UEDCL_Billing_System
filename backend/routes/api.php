@@ -72,4 +72,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('reports/summary', [ReportController::class, 'summary']);
         Route::get('reports/overview', [ReportController::class, 'overview']);
     });
+
+    Route::post('reports/custom', [\App\Http\Controllers\Api\CustomReportController::class, 'generate']);
 });
