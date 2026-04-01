@@ -10,6 +10,7 @@ services:
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
+      - APP_KEY=base64:9wMof55S4f25b+eJm+PjG40x51E28H/lW4kX4bEx/mE=
       - APP_URL=https://ug.arosoft.io
       - FRONTEND_URL=https://ug.arosoft.io
       - SANCTUM_STATEFUL_DOMAINS=ug.arosoft.io
