@@ -276,7 +276,7 @@ button {
    ================================== */
 .public-main {
   flex: 1;
-  padding: 40px 0 60px;
+  padding: 24px 0 60px;
   animation: fadeIn 0.5s ease-out forwards;
 }
 
@@ -826,7 +826,7 @@ button {
   flex: 1;
   width: var(--dashboard-width);
   margin: 0 auto;
-  padding: 32px 24px 60px;
+  padding: 24px 24px 60px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -872,6 +872,10 @@ button {
   .public-header-inner, .topbar-inner, .footer-inner, .public-main, .dashboard-content {
     width: 100%;
     border-radius: 0;
+  }
+
+  .public-main, .dashboard-content {
+    padding-top: 16px;
   }
 }
 
