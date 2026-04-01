@@ -30,6 +30,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy the entire backend codebase
 COPY . .
 
+# Ensure storage and bootstrap subdirectories exist for Laravel, and fix permissions BEFORE composer install
+RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
 # Run composer install to build dependencies safely
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
