@@ -102,11 +102,10 @@ button {
 }
 
 .public-header {
-  background: var(--color-primary-soft);
   position: sticky;
   top: 0;
   z-index: 50;
-  box-shadow: 0 1px 0 rgba(74, 58, 255, 0.1);
+  padding-top: 16px;
 }
 
 .public-header-inner, .public-main, .footer-inner {
@@ -115,10 +114,8 @@ button {
 }
 
 .footer {
-  background: var(--color-primary-soft);
   padding: 40px 0;
   margin-top: auto;
-  box-shadow: 0 -1px 0 rgba(74, 58, 255, 0.1);
 }
 
 .footer-inner {
@@ -128,6 +125,11 @@ button {
   text-align: center;
   gap: 8px;
   position: relative;
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: 32px 24px;
+  overflow: hidden;
 }
 
 .footer-title {
@@ -143,12 +145,16 @@ button {
 
 .public-header-inner {
   min-height: 84px;
-  padding: 14px 0;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
   position: relative;
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .public-header-inner::after, .topbar-inner::after, .footer-inner::before {
@@ -167,7 +173,7 @@ button {
 }
 
 .footer-inner::before {
-  top: -40px;
+  top: 0;
 }
 
 .mobile-nav-toggle, .public-nav-close, .sidebar-close, .topbar-menu {
@@ -777,11 +783,10 @@ button {
 }
 
 .topbar {
-  background: var(--color-primary-soft);
   position: sticky;
   top: 0;
   z-index: 30;
-  box-shadow: 0 1px 0 rgba(74, 58, 255, 0.1);
+  padding-top: 16px;
 }
 
 .topbar-inner {
@@ -793,6 +798,10 @@ button {
   justify-content: space-between;
   padding: 0 24px;
   position: relative;
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .topbar-start {
