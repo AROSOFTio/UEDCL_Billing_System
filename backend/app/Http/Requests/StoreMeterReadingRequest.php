@@ -34,10 +34,6 @@ class StoreMeterReadingRequest extends FormRequest
 
             $previousReading = (float) ($meter->latestReading?->current_reading ?? 0);
             $currentReading = (float) $this->input('current_reading', 0);
-
-            if ($currentReading < $previousReading) {
-                $validator->errors()->add('current_reading', 'Current reading cannot be lower than the previous reading.');
-            }
         });
     }
 }

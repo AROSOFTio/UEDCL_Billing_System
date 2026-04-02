@@ -13,13 +13,7 @@ class BillGenerationService
 {
     public function calculate(float $previousReading, float $currentReading, float $tariffRate, float $fixedCharge): array
     {
-        if ($currentReading < $previousReading) {
-            throw ValidationException::withMessages([
-                'current_reading' => 'Current reading cannot be lower than the previous reading.',
-            ]);
-        }
-
-        $unitsConsumed = round($currentReading - $previousReading, 2);
+        $unitsConsumed = round(abs($currentReading - $previousReading), 2);
         $energyCharge = round($unitsConsumed * $tariffRate, 2);
         $totalBill = round($energyCharge + $fixedCharge, 2);
 
