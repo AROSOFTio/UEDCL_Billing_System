@@ -83,7 +83,10 @@ export default function LoginPage() {
             />
           </div>
           <div className="field">
-            <label htmlFor="password" style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-muted)' }}>Password</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label htmlFor="password" style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-muted)', marginBottom: 0 }}>Password</label>
+              <Link to="/forgot-password" style={{ fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-primary)', textDecoration: 'none' }} onMouseOver={(e) => e.target.style.textDecoration = 'underline'} onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Forgot Password?</Link>
+            </div>
             <input
               id="password"
               name="password"

@@ -7,6 +7,7 @@ import AboutPage from '../pages/public/AboutPage';
 import ContactPage from '../pages/public/ContactPage';
 import LoginPage from '../pages/public/LoginPage';
 import RegisterPage from '../pages/public/RegisterPage';
+import ForgotPasswordPage from '../pages/public/ForgotPasswordPage';
 import NotFoundPage from '../pages/public/NotFoundPage';
 import CustomerDashboardPage from '../pages/customer/DashboardPage';
 import CustomerProfilePage from '../pages/customer/ProfilePage';
@@ -48,6 +49,7 @@ export default function AppRoutes() {
         <Route path="contact" element={<ContactPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
       </Route>
 
       <Route element={<ProtectedRoute roles={['customer']} />}>

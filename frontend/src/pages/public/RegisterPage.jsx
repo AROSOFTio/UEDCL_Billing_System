@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import AlertMessage from '../../components/common/AlertMessage';
 import { useAuth } from '../../context/AuthContext';
 import { homePathByRole } from '../../utils/constants';
@@ -101,6 +101,10 @@ export default function RegisterPage() {
         </form>
         <AlertMessage tone="success">{message}</AlertMessage>
         <AlertMessage tone="error">{error}</AlertMessage>
+
+        <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.95rem', color: 'var(--color-text-muted)' }}>
+          Already have an account? <Link to="/login" style={{ color: 'var(--color-primary)', fontWeight: '600', textDecoration: 'none' }} onMouseOver={(e) => e.target.style.textDecoration = 'underline'} onMouseOut={(e) => e.target.style.textDecoration = 'none'}>Sign in</Link>
+        </div>
       </div>
     </section>
   );

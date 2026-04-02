@@ -89,9 +89,6 @@ export default function PublicLayout() {
               <NavLink className={publicLinkClass} to="/login" onClick={() => setMenuOpen(false)}>
                 Login
               </NavLink>
-              <NavLink className={publicLinkClass} to="/register" onClick={() => setMenuOpen(false)}>
-                Register
-              </NavLink>
             </nav>
           </div>
         </div>
