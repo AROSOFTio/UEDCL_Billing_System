@@ -4,6 +4,7 @@
   "type": "project",
   "require": {
     "php": "^8.2",
+    "africastalking/africastalking": "^3.0",
     "laravel/framework": "^11.0",
     "laravel/sanctum": "^4.0"
   },
