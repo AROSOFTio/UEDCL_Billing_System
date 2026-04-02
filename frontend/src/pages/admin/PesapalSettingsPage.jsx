@@ -8,6 +8,7 @@ const initialForm = {
   'pesapal.env': 'sandbox',
   'pesapal.consumer_key': '',
   'pesapal.consumer_secret': '',
+  'pesapal.callback_url': '',
 };
 
 export default function PesapalSettingsPage() {
@@ -103,6 +104,17 @@ export default function PesapalSettingsPage() {
             onChange={handleChange} 
             placeholder="Enter Consumer Secret"
           />
+        </div>
+        <div className="field" style={{ gridColumn: '1 / -1' }}>
+          <label htmlFor="pesapal.callback_url">System Base URL (For Callbacks)</label>
+          <input 
+            id="pesapal.callback_url" 
+            name="pesapal.callback_url" 
+            value={form['pesapal.callback_url'] || ''} 
+            onChange={handleChange} 
+            placeholder="e.g. https://ug.arosoft.io"
+          />
+          <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '4px', display: 'block' }}>If left blank, the backend will attempt to use its internal APP_URL. In a production environment, you should explicitly set this to your public domain (https://ug.arosoft.io).</span>
         </div>
         <div className="form-actions" style={{ gridColumn: '1 / -1' }}>
           <button className="button" type="submit" disabled={saving}>

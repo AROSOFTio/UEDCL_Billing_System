@@ -52,7 +52,9 @@ class PesapalService
     private function registerIPN(string $token): string
     {
         // Pesapal requires IPN registration per transaction or globally. We register one dynamically to get the ipn_id.
-        $ipnUrl = config('app.url') . '/api/pesapal/ipn';
+        $appUrl = Setting::getValue('pesapal.callback_url', config('app.url'));
+        $appUrl = rtrim($appUrl, '/');
+        $ipnUrl = $appUrl . '/api/pesapal/ipn';
         
         $response = Http::withToken($token)->post("{$this->baseUrl}/api/URLSetup/RegisterIPN", [
             'url' => $ipnUrl,
@@ -82,7 +84,7 @@ class PesapalService
             'currency' => 'UGX',
             'amount' => $bill->total_amount,
             'description' => "Payment for UEDCL Bill #{$bill->bill_number}",
-            'callback_url' => config('app.url') . "/customer/bills/{$bill->id}?payment=success",
+            'callback_url' => Setting::getValue('pesapal.callback_url', config('app.url')) . "/customer/bills/{$bill->id}?payment=success",
             'notification_id' => $ipnId,
             'billing_address' => [
                 'email_address' => $customer->email,
