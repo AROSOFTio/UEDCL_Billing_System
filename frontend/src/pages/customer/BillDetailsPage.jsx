@@ -79,7 +79,7 @@ export default function BillDetailsPage() {
       <PageHeader
         title="Bill Details"
         subtitle="Full breakdown of the generated customer bill and linked payment activity."
-        action={
+        actions={
           bill?.status !== 'paid' && (
             <button
               className="button"

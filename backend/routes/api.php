@@ -14,7 +14,6 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\TariffController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PesapalController;
-use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::match(['get', 'post'], 'pesapal/ipn', [PesapalController::class, 'ipnCallback'])->name('pesapal.ipn');

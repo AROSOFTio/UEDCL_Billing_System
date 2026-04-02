@@ -100,6 +100,7 @@ export const navigationByRole = {
     { label: 'Add User', path: '/admin/users/new', icon: 'add-user' },
     { label: 'Tariffs', path: '/admin/tariffs', icon: 'tariffs' },
     { label: 'SMS Settings', path: '/admin/sms-settings', icon: 'sms' },
+    { label: 'Pesapal Settings', path: '/admin/pesapal-settings', icon: 'settings' },
     { label: 'Executive Reports', path: '/admin/reports', icon: 'dashboard' },
     {
       label: 'Reports',
