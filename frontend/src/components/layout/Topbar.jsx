@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import AppIcon from '../common/AppIcon';
 
@@ -9,7 +10,13 @@ const workspaceTitles = {
 };
 
 export default function Topbar({ onMenuToggle }) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate('/login', { replace: true });
+  }
 
   return (
     <div className="topbar">
@@ -31,6 +38,15 @@ export default function Topbar({ onMenuToggle }) {
           }}>
             {user?.email?.[0]?.toUpperCase() || 'U'}
           </div>
+          <button 
+            type="button" 
+            className="button-ghost" 
+            onClick={handleLogout} 
+            title="Logout"
+            style={{ padding: '0 12px', minHeight: '44px', borderRadius: 'var(--radius-md)', color: 'var(--color-accent)' }}
+          >
+            <AppIcon name="logout" />
+          </button>
         </div>
       </div>
     </div>
